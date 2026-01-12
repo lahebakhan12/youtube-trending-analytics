@@ -1,0 +1,53 @@
+-- ========================================
+-- YOUTUBE TRENDING ANALYSIS - SQL QUERIES
+-- elevate internship project
+-- ========================================
+
+-- 1. 🏆 TOP 5 CATEGORIES (VIEWS)
+SELECT 
+    category_id,
+    COUNT(*) as video_count,
+    SUM(views) as total_views,
+    ROUND(AVG(views),0) as avg_views
+FROM trending_videos 
+GROUP BY category_id 
+ORDER BY total_views DESC 
+LIMIT 5;
+
+-- 2. 🔥 MOST ENGAGED CATEGORIES
+SELECT 
+    category_id,
+    ROUND(AVG(likes*100.0/views),2) as avg_like_rate_pct
+FROM trending_videos 
+WHERE views > 0
+GROUP BY category_id 
+ORDER BY avg_like_rate_pct DESC 
+LIMIT 5;
+
+-- 3. 📺 TOP 10 CHANNELS
+SELECT 
+    channel_title,
+    COUNT(*) as video_count,
+    SUM(views) as total_views
+FROM trending_videos 
+GROUP BY channel_title 
+ORDER BY total_views DESC 
+LIMIT 10;
+
+-- 4. 📅 TRENDING DAYS (sample)
+SELECT 
+    DATE(trending_date) as trend_date,
+    COUNT(*) as videos_trending,
+    SUM(views) as total_views_that_day
+FROM trending_videos 
+GROUP BY DATE(trending_date) 
+ORDER BY trend_date DESC 
+LIMIT 7;
+
+-- 5. 🎯 EXECUTIVE SUMMARY
+SELECT 
+    'SUMMARY' as metric,
+    COUNT(DISTINCT video_id) as unique_videos,
+    SUM(views) as grand_total_views,
+    ROUND(AVG(likes*100.0/views),2) as avg_engagement_pct
+FROM trending_videos;
